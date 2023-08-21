@@ -64,12 +64,14 @@ jobs:
   husky-scan:
     uses: button-inc/gh-actions/.github/workflows/scan-code-husky.yml@develop
     with:
-      package-manager: 'yarn'
-    with:
       working-directory: ./test-react-app
       node-version: '18'
 
-
+  zap-scan:
+    uses: button-inc/gh-actions/.github/workflows/scan-code-owasp-zap.yml@develop
+    with:
+      target-url: 'http://localhost:3000'
+      package-manager: 'yarn'
 
   # docker-build:
   #   runs-on: ubuntu-latest
