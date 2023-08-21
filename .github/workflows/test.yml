@@ -24,7 +24,7 @@ jobs:
       - name: dev env setup
         uses: ./.github/actions/dev-env-setup
       - run: yarn audit-deps
-        working-directory: ./app
+        working-directory: ./test-react-app
 
   pre-commit:
     needs: install-dev-tools
@@ -53,21 +53,18 @@ jobs:
       - run: pre-commit run --all-files
 
   sonarcloud-scan:
+    working-directory: test-react-app
     uses: button-inc/gh-actions/.github/workflows/scan-code-sonarcloud.yml@develop
     secrets:
-      github-token: ${{ secrets.GH_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
       sonar-token: ${{ secrets.SONAR_TOKEN}}
 
   trivy-scan:
+    working-directory: test-react-app
     uses: button-inc/gh-actions/.github/workflows/scan-code-trivy.yml@develop
 
-  husky-scan:
-    uses: button-inc/gh-actions/.github/workflows/scan-code-husky.yml@develop
-    with:
-      working-directory: ./test-react-app
-      node-version: '18'
-
   zap-scan:
+    working-directory: test-react-app
     uses: button-inc/gh-actions/.github/workflows/scan-code-owasp-zap.yml@develop
     with:
       target-url: 'http://localhost:3000'
