@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+defaults:
+ run:
+  working-directory: ./test-react-app
+
 jobs:
   install-dev-tools:
     runs-on: ubuntu-latest
@@ -53,18 +57,15 @@ jobs:
       - run: pre-commit run --all-files
 
   sonarcloud-scan:
-    working-directory: test-react-app
     uses: button-inc/gh-actions/.github/workflows/scan-code-sonarcloud.yml@develop
     secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ secrets.GH_TOKEN }}
       sonar-token: ${{ secrets.SONAR_TOKEN}}
 
   trivy-scan:
-    working-directory: test-react-app
     uses: button-inc/gh-actions/.github/workflows/scan-code-trivy.yml@develop
 
   zap-scan:
-    working-directory: test-react-app
     uses: button-inc/gh-actions/.github/workflows/scan-code-owasp-zap.yml@develop
     with:
       target-url: 'http://localhost:3000'
