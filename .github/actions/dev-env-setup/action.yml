@@ -5,6 +5,13 @@ runs:
   steps:
     - name: asdf setup
       uses: asdf-vm/actions/setup@v1
+    - name: install tools
+      run: |
+        cat .tool-versions | cut -f 1 -d ' ' | xargs -n 1 asdf plugin-add || true
+	      asdf plugin-update --all
+	      asdf reshim
+	      pip install -r requirements.txt
+	      asdf reshim
     - uses: actions/cache@v3
       id: asdf-cache
       with:
