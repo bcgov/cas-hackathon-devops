@@ -20,15 +20,9 @@ runs:
           ~/.asdf
         key: ${{ runner.os }}-asdf-cache-${{ hashFiles('.tool-versions') }}
     - uses: actions/cache@v3
-      id: perl-cache
-      with:
-        path: |
-          ~/perl5
-        key: ${{ runner.os }}-perl-cache-${{ env.CURRENT_PERL_VERSION }}-${{ hashFiles('cpanfile') }}
-    - uses: actions/cache@v3
       id: yarn-cache
       with:
         path: |
           ~/.cache/yarn
           ./test-react-app/node_modules
-        key: ${{ runner.os }}-yarn-cache-${{ hashFiles('app/yarn.lock') }}-v2
+        key: ${{ runner.os }}-yarn-cache-${{ hashFiles('test-react-app/yarn.lock') }}
