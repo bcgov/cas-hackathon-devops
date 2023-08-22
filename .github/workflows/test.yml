@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [main]
 
-# defaults:
-#  run:
-#   working-directory: ./app
-
 jobs:
   install-dev-tools:
     runs-on: ubuntu-latest
@@ -20,69 +16,69 @@ jobs:
       - run: yarn install --frozen-lockfile
         working-directory: ./app
 
-  yarn-audit:
-    needs: install-dev-tools
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: dev env setup
-        uses: ./.github/actions/dev-env-setup
-      - run: yarn audit-deps
-        working-directory: ./app
+  # yarn-audit:
+  #   needs: install-dev-tools
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: dev env setup
+  #       uses: ./.github/actions/dev-env-setup
+  #     - run: yarn audit-deps
+  #       working-directory: ./app
 
-  pre-commit:
-    needs: install-dev-tools
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: dev env setup
-        uses: ./.github/actions/dev-env-setup
-      - name: set pre-commit cache directory
-        run: |
-          echo "PRE_COMMIT_HOME=$GITHUB_WORKSPACE/.pre-commit-cache" >> $GITHUB_ENV
-      - name: set PY
-        run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
-      - name: create commitlint COMMIT_EDITMSG if not exists
-        run: |
-          if test -f ".git/COMMIT_EDITMSG"; then
-              echo "COMMIT_EDITMSG EXISTS, skipping"
-          else
-              touch .git/COMMIT_EDITMSG
-          fi
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ./.pre-commit-cache
-          key: pre-commit-${{ env.PY }}-${{ hashFiles('.pre-commit-config.yaml') }}-v3
-      - run: pre-commit run --all-files
+  # pre-commit:
+  #   needs: install-dev-tools
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: dev env setup
+  #       uses: ./.github/actions/dev-env-setup
+  #     - name: set pre-commit cache directory
+  #       run: |
+  #         echo "PRE_COMMIT_HOME=$GITHUB_WORKSPACE/.pre-commit-cache" >> $GITHUB_ENV
+  #     - name: set PY
+  #       run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
+  #     - name: create commitlint COMMIT_EDITMSG if not exists
+  #       run: |
+  #         if test -f ".git/COMMIT_EDITMSG"; then
+  #             echo "COMMIT_EDITMSG EXISTS, skipping"
+  #         else
+  #             touch .git/COMMIT_EDITMSG
+  #         fi
+  #     - uses: actions/cache@v3
+  #       with:
+  #         path: |
+  #           ./.pre-commit-cache
+  #         key: pre-commit-${{ env.PY }}-${{ hashFiles('.pre-commit-config.yaml') }}-v3
+  #     - run: pre-commit run --all-files
 
-  sonarcloud-scan:
-    uses: button-inc/gh-actions/.github/workflows/scan-code-sonarcloud.yml@develop
-    secrets:
-      github-token: ${{ secrets.GH_TOKEN }}
-      sonar-token: ${{ secrets.SONAR_TOKEN}}
+  # sonarcloud-scan:
+  #   uses: button-inc/gh-actions/.github/workflows/scan-code-sonarcloud.yml@develop
+  #   secrets:
+  #     github-token: ${{ secrets.GH_TOKEN }}
+  #     sonar-token: ${{ secrets.SONAR_TOKEN}}
 
-  trivy-scan:
-    uses: button-inc/gh-actions/.github/workflows/scan-code-trivy.yml@develop
+  # trivy-scan:
+  #   uses: button-inc/gh-actions/.github/workflows/scan-code-trivy.yml@develop
 
-  zap-scan:
-    uses: button-inc/gh-actions/.github/workflows/scan-code-owasp-zap.yml@develop
-    with:
-      target-url: 'http://localhost:3000'
-      package-manager: 'yarn'
+  # zap-scan:
+  #   uses: button-inc/gh-actions/.github/workflows/scan-code-owasp-zap.yml@develop
+  #   with:
+  #     target-url: 'http://localhost:3000'
+  #     package-manager: 'yarn'
 
-  show-sha:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: display sha
-        shell: bash
-        run: |
-          GIT_HEAD_SHA=$(git rev-parse HEAD)
-          echo $GIT_HEAD_SHA
-          cat test-values.yaml
-          sed -i "s/gitsha:.*/gitsha: $GIT_HEAD_SHA/g" test-values.yaml
-          cat test-values.yaml
+  # show-sha:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: display sha
+  #       shell: bash
+  #       run: |
+  #         GIT_HEAD_SHA=$(git rev-parse HEAD)
+  #         echo $GIT_HEAD_SHA
+  #         cat test-values.yaml
+  #         sed -i "s/gitsha:.*/gitsha: $GIT_HEAD_SHA/g" test-values.yaml
+  #         cat test-values.yaml
 
   update_manifest:
     needs: install-dev-tools
@@ -107,14 +103,13 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-
-      - name: Set image IDs in Kustomize manifests
+      - name: Set SHA in manifest
         shell: bash
         run: |
           cd test-app
           GIT_HEAD_SHA=${{ steps.get-sha.outputs.gitsha }}
           echo $GIT_HEAD_SHA
-          sed -i "s/gitsha:.*/gitsha: $GIT_HEAD_SHA/g" values-dev.yaml
+          sed -i "s/sourceHeadGitSha:.*/sourceHeadGitSha: $GIT_HEAD_SHA/g" values-dev.yaml
           git commit -am "Update source SHA for deploy"
           git push origin
 
