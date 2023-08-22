@@ -37,6 +37,8 @@
     ]
   },
   "devDependencies": {
-    "improved-yarn-audit": "^3.0.0"
+    "eslint": "^8.47.0",
+    "improved-yarn-audit": "^3.0.0",
+    "prettier": "^3.0.2"
   }
 }
