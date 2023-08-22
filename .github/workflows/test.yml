@@ -73,6 +73,7 @@ jobs:
       package-manager: 'yarn'
 
   show-sha:
+    runs-on: ubuntu-latest
     steps:
       - name: display sha
         shell: bash
