@@ -73,11 +73,15 @@ jobs:
       package-manager: 'yarn'
 
   show-sha:
-    name: display sha
-    shell: bash
-    run: |
-      GIT_HEAD_SHA=$(git rev-parse HEAD)
-      echo $GIT_HEAD_SHA
+    steps:
+      - name: display sha
+        shell: bash
+        run: |
+          GIT_HEAD_SHA=$(git rev-parse HEAD)
+          echo $GIT_HEAD_SHA
+          cat test-values.yaml
+          sed -i "s/gitsha:.*/gitsha: $GIT_HEAD_SHA/g" test-values.yaml
+          cat test-values.yaml
 
   # docker-build:
   #   runs-on: ubuntu-latest
