@@ -47,6 +47,7 @@ jobs:
           if test -f ".git/COMMIT_EDITMSG"; then
               echo "COMMIT_EDITMSG EXISTS, skipping"
           else
+              mkdir .git
               touch .git/COMMIT_EDITMSG
           fi
       - uses: actions/cache@v3
