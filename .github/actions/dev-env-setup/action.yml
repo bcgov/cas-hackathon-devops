@@ -5,6 +5,7 @@ runs:
   steps:
     - name: asdf setup
       uses: asdf-vm/actions/setup@v1
+    - uses: actions/checkout@v3
     - name: install tools
       shell: bash
       run: |
