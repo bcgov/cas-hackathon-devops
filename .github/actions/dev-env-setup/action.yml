@@ -26,3 +26,6 @@ runs:
           ~/.cache/yarn
           ./test-react-app/node_modules
         key: ${{ runner.os }}-yarn-cache-${{ hashFiles('test-react-app/yarn.lock') }}-v1
+    - name: update submodules
+      run: git submodule update --init
+      shell: bash
