@@ -9,7 +9,7 @@ ENV HOME=/root
 
 WORKDIR ${HOME}
 
-COPY test-react-app/ ${HOME}/
+COPY app/ ${HOME}/
 
 RUN git clone https://github.com/asdf-vm/asdf.git ${HOME}/asdf --depth 1 --branch v0.11.2
 
