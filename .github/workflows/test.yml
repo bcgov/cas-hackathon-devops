@@ -72,6 +72,13 @@ jobs:
       target-url: 'http://localhost:3000'
       package-manager: 'yarn'
 
+  show-sha:
+    name: display sha
+    shell: bash
+    run: |
+      GIT_HEAD_SHA=$(git rev-parse HEAD)
+      echo $GIT_HEAD_SHA
+
   # docker-build:
   #   runs-on: ubuntu-latest
   #   strategy:
