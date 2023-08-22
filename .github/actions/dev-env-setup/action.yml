@@ -12,7 +12,7 @@ runs:
         cat .tool-versions | cut -f 1 -d ' ' | xargs -n 1 asdf plugin-add || true
         asdf plugin-update --all
         asdf reshim
-        pip install -r requirements.txt
+        pip install pre-commit gitlint
         asdf reshim
     - uses: actions/cache@v3
       id: asdf-cache
