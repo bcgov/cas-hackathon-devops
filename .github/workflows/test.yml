@@ -80,7 +80,7 @@ jobs:
   #         sed -i "s/gitsha:.*/gitsha: $GIT_HEAD_SHA/g" test-values.yaml
   #         cat test-values.yaml
 
-  update_manifest: # Add an awesome comment because this comment is awesome
+  update_manifest: # Remove awesome comment
     needs: install-dev-tools
     runs-on: ubuntu-latest
     steps:
